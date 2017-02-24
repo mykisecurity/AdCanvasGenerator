@@ -1,0 +1,38 @@
+{
+  "author": "Antoine Vincent Jebara",
+  "commands": [
+    {
+      "script": "adCanvasGenerator.cocoascript",
+      "handler": "generateFamousGoogleArtboards",
+      "shortcut": "shift cmd ]",
+      "name": "Popular Google Formats",
+      "identifier": "popular-google"
+    },
+    {
+      "script": "adCanvasGenerator.cocoascript",
+      "handler": "generateOtherGoogleArtboards",
+      "shortcut": "shift cmd [",
+      "name": "Other Google Formats",
+      "identifier": "other-google"
+    },
+    {
+      "script": "adCanvasGenerator.cocoascript",
+      "handler": "generateFacebookClickToWebsite",
+      "shortcut": "shift cmd {",
+      "name": "Facebook | Website click",
+      "identifier": "fb-website-click"
+    }
+  ],
+  "menu": {
+    "items": [
+      "popular-google",
+      "other-google",
+      "fb-website-click"
+    ]
+  },
+  "identifier": "co.myki.displayAdsCanvasGenerator",
+  "version": "1.0",
+  "description": "Sketch plugin to generate display ad banner artboards",
+  "authorEmail": "antoine@myki.co",
+  "name": "Display ad canvas generator"
+}

@@ -1,0 +1,131 @@
+// Sketch Plugin: AEIconizer (ctrl shift i)
+// Source: github.com/tadija/AEIconizer
+
+// var iTunesSizes = [NSArray arrayWithObjects: 999, nil]
+// var iOSSizes = [NSArray arrayWithObjects: 83.5, 76, 60, 40, 29, 20, nil]
+// var watchOSSizes = [NSArray arrayWithObjects: 98, 86, 27.5, 24, nil]
+// var otherSizes = [NSArray arrayWithObjects: 72, 57, 50, nil]
+
+var mediumRectangle = [NSArray arrayWithObjects: 300.0, 250.0, "mediumRectangle"]
+var largeRectangle = [NSArray arrayWithObjects: 336.0, 280.0, "largeRectangle"]
+var leaderBoard = [NSArray arrayWithObjects: 728.0, 90.0, "leaderBoard"]
+var halfPage = [NSArray arrayWithObjects: 300.0, 600.0, "halfPage"]
+var largeMobileBanner = [NSArray arrayWithObjects: 320.0, 100.0, "largeMobileBanner"]
+
+
+var mobileLeaderBoard=[NSArray arrayWithObjects: 320.0, 50.0, "mobileLeaderBoard"]
+var banner=[NSArray arrayWithObjects: 468.0, 60.0, "banner"]
+var halfBanner=[NSArray arrayWithObjects: 234.0, 60.0, "halfBanner"]
+var skyscraper=[NSArray arrayWithObjects: 120.0, 600.0, "skyscraper"]
+var verticalBanner=[NSArray arrayWithObjects: 120.0, 240.0, "verticalBanner"]
+var wideSkyscraper=[NSArray arrayWithObjects: 160.0, 600.0, "wideSkyscraper"]
+var portrait=[NSArray arrayWithObjects: 100.0, 1050.0, "portrait"]
+var largeLeaderboard=[NSArray arrayWithObjects: 970.0, 90.0, "largeLeaderboard"]
+var billboard=[NSArray arrayWithObjects: 970.0, 250.0, "billboard"]
+var square=[NSArray arrayWithObjects: 250.0, 250.0, "square"]
+var smallSquare=[NSArray arrayWithObjects: 200.0, 200.0, "smallSquare"]
+var smallRectangle=[NSArray arrayWithObjects: 180.0, 150.0, "smallRectangle"]
+var button=[NSArray arrayWithObjects: 125.0, 125.0, "button"]
+
+
+
+//facebook click to website
+var facebookLinks=[NSArray arrayWithObjects: 1200.0, 628.0, "facebookLinks"]
+var facebookCarousel=[NSArray arrayWithObjects: 1080.0, 1080.0, "facebookCarousel"]
+var facebookCanvas=[NSArray arrayWithObjects: 1200.0, 628.0, "facebookCanvas"]
+
+
+// var googleIconSizes=[NSArray arrayWithObjects: mediumRectangle, largeRectangle, leaderBoard, halfPage, largeMobileBanner,  nil]
+
+var generateFamousGoogleArtboards = function(context){
+    var famousGoogleIconSet=[NSArray arrayWithObjects: mediumRectangle, largeRectangle, leaderBoard, halfPage, largeMobileBanner,  nil]
+    initializeGeneration(context, famousGoogleIconSet);
+}
+var generateOtherGoogleArtboards = function(context){
+    var otherGoogleIconSet=[NSArray arrayWithObjects: mobileLeaderBoard, banner,halfBanner, skyscraper, verticalBanner, wideSkyscraper, portrait,largeLeaderboard, billboard,square,  smallSquare, smallRectangle,  button, nil]
+    initializeGeneration(context, otherGoogleIconSet);
+}
+
+var generateFacebookClickToWebsite = function(context){
+    var fbCTWSet=[NSArray arrayWithObjects: facebookLinks, facebookCarousel, facebookCanvas ,nil]
+    initializeGeneration(context, fbCTWSet);
+}
+
+function initializeGeneration(context, iconSets){
+    doc = context.document
+    if (originalIcon = handleSelection(context)) {
+        [originalIcon setName: "Original-Icon"]
+        currentX=[[originalIcon absoluteRect] rulerX] + [[originalIcon frame] width]+space;
+        currentY=[[originalIcon absoluteRect] rulerY] +[[originalIcon frame] width]+space;
+        initialX=currentX;
+        // initalY=currentY;
+        initalY=[[originalIcon absoluteRect] rulerY];
+
+        iconize(originalIcon, iconSets);
+        [[doc currentView] centerLayersInCanvas]
+
+    }
+}
+// var iconSizes = [NSArray arrayWithObjects: iTunesSizes, iOSSizes, watchOSSizes, otherSizes, nil]
+
+var doc=nil;
+var currentX=0;
+var currentY=0;
+var initialX=0;
+var initialY=0;
+var space=40.0;
+var maxX=0;
+var maxY=0;
+
+
+function iconize(originalIcon, googleIconSizes){
+    var allTypes = [googleIconSizes objectEnumerator]
+    while (sizeArray = [allTypes nextObject]) {
+         var width=[sizeArray objectAtIndex:0];
+         var height=[sizeArray objectAtIndex:1];
+         var name=[sizeArray objectAtIndex:2];
+         createShape(originalIcon, width, height, name)
+    }
+
+}
+
+function createShape(originalIcon, width, height, name){
+    var icon = [originalIcon duplicate]
+    [icon setName: name]
+    [[icon frame] setWidth:width]
+    [[icon frame] setHeight:height]
+    [[icon absoluteRect] setRulerX:currentX]
+    [[icon absoluteRect] setRulerY: initalY]
+
+    var potX=currentX+width+space;
+    var potY=currentY+height+space;
+    currentY=0
+    currentX=potX
+}
+
+function handleSelection(context) {
+    var selection = context.selection
+    var doc = context.document
+    var iconArtboard
+
+    if([selection count] == 0) {
+        if ([[[doc currentPage] artboards] count] == 1) {
+            iconArtboard = [[[doc currentPage] artboards] firstObject]
+        } else {
+            [doc showMessage:"select an artboard to place adboards."]
+        }
+    } else {
+        var currentSelection = selection[0]
+        if (currentSelection.className() == "MSArtboardGroup") {
+            iconArtboard = currentSelection
+        } else {
+            iconArtboard = [currentSelection parentArtboard]
+            if (!iconArtboard) {
+                [doc showMessage:"The selection has to be inside the artboard"]
+            }
+        }
+        [currentSelection setIsSelected:false]
+    }
+
+    return iconArtboard
+}
